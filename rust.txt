@@ -1,0 +1,31 @@
+// fn main() {
+//     println!("Hello, world!");
+// }  calamine = "0.24.0"
+
+use std::error::Error;
+use calamine::{Reader, open_workbook_auto};
+
+fn main() -> Result<(), Box<dyn Error>> {
+    // Specify the path to your Excel file
+    let file_path = "D:/Domestic/practise node/IOL_Download 2023.02.01.xlsx";
+
+    // Open the Excel file
+    let mut workbook = open_workbook_auto(&file_path)?;
+
+    // Create a longer-lived value for sheet names
+    let sheet_names = workbook.sheet_names();
+    let sheet_name = sheet_names.get(0).ok_or("No sheets found")?;
+    let range = workbook.worksheet_range(sheet_name)?;
+
+    // Iterate over each row in the sheet
+    for row in range.rows() {
+        // Iterate over each cell in the row
+        for cell in row.iter() {
+            // Print the cell value
+            print!("{:?}\t", cell);
+        }
+        println!(); // Move to the next row
+    }
+
+    Ok(())
+}
