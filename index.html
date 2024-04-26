@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excel Data Table</title>
+</head>
+<body>
+  <h1>Excel Data Table</h1>
+  <table id="excelDataTable">
+    <thead>
+      <tr>
+        <th>Loading...</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Loading...</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+   async function fetchExcelData() {
+  try {
+    const response = await fetch('excel-data.json');
+    const data = await response.json();
+
+    console.log('Fetched data:', data);
+
+    if (data) {
+      updateTable(data.columns, data.rows);
+    } else {
+      console.error('Error fetching Excel data: Data is null or undefined.');
+    }
+  } catch (error) {
+    console.error('Error fetching Excel data:', error.message);
+  }
+}
+  
+    function updateTable(columns, rows) {
+      const table = document.getElementById('excelDataTable');
+      const thead = table.querySelector('thead');
+      const tbody = table.querySelector('tbody');
+  
+      // Clear existing content
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
+  
+      // Update table header
+      const headerRow = document.createElement('tr');
+      columns.forEach(column => {
+        const th = document.createElement('th');
+        th.textContent = column;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+  
+      // Update table rows
+      rows.forEach(rowData => {
+        const row = document.createElement('tr');
+        rowData.forEach(cellData => {
+          const td = document.createElement('td');
+          td.textContent = cellData;
+          row.appendChild(td);
+        });
+        tbody.appendChild(row);
+      });
+    }
+  
+    // Attach the fetchExcelData function to the window.onload event
+    window.onload = fetchExcelData;
+  </script>
+  
+  
+</body>
+</html>
